@@ -1,9 +1,25 @@
-body {
-  background-image: url(../img/97899.jpg);
-  background-size: contain;
-}
-
 .card-img {
   width: 200px;
   height: 200px;
+}
+
+body.default-bg {
+  background-image: url('./assets/home.jpg');
+  background-size: cover;
+}
+
+body.actresses-bg {
+  background-image: url('./assets/img1.jpg');
+  background-size: contain;
+}
+
+body.actors-bg {
+  background-image: url('./assets/img2.jpg');
+  background-size: contain;
+}
+
+body.all-bg {
+  background-image: url('./assets/img3.jpg');
+  background-size: contain;
+
 }

@@ -1,6 +1,5 @@
 import { useState, useEffect } from 'react';
 import axios from 'axios';
-
 const endPointActresses = 'https://www.freetestapi.com/api/v1/actresses';
 const endPointActors = 'https://www.freetestapi.com/api/v1/actors';
 
@@ -10,7 +9,6 @@ function App() {
   const [selectedCategory, setSelectedCategory] = useState('');
   const [searchedName, setSearchedName] = useState('');
 
-  // Fetch functions
   function fetchActresses() {
     axios.get(endPointActresses).then(result => {
       setActresses(result.data);
@@ -34,6 +32,24 @@ function App() {
     }
   }, [selectedCategory]);
 
+  useEffect(() => {
+    document.body.classList.remove('default-bg', 'actresses-bg', 'actors-bg', 'all-bg');
+
+    if (selectedCategory === 'actresses') {
+      document.body.classList.add('actresses-bg');
+    } else if (selectedCategory === 'actors') {
+      document.body.classList.add('actors-bg');
+    } else if (selectedCategory === 'all') {
+      document.body.classList.add('all-bg');
+    } else {
+      document.body.classList.add('default-bg');
+    }
+
+    return () => {
+      document.body.classList.remove('default-bg', 'actresses-bg', 'actors-bg', 'all-bg');
+    };
+  }, [selectedCategory]);
+
   useEffect(fetchActresses, []);
   useEffect(fetchActors, []);
 
@@ -49,12 +65,18 @@ function App() {
   return (
     <>
       <div className="container d-flex justify-content-center mt-5 mb-5">
-        {selectedCategory === 'all' ? <input
-          type="text"
-          placeholder="Insert a name"
-          value={searchedName}
-          onChange={(e) => setSearchedName(e.target.value)}
-        /> : ''}
+
+        {selectedCategory === 'all' ? (
+          <input
+            type="text"
+            placeholder="Insert a name"
+            value={searchedName}
+            onChange={(event) => setSearchedName(event.target.value)}
+          />
+        ) : (
+          ''
+        )}
+
         <button
           onClick={() => setSelectedCategory('actresses')}
           type="button"
@@ -119,6 +141,7 @@ function App() {
 
         {selectedCategory === 'all' && (
           <>
+
             {filteredActresses.map(({ name, birth_year, nationality, biography, image, awards }, index) => (
               <div className="card container mb-5 bg-dark-subtle" key={`actress-${index}`}>
                 <div className="card-body">
@@ -137,6 +160,7 @@ function App() {
                 </ul>
               </div>
             ))}
+
             {filteredActors.map(({ id, name, birth_year, nationality, biography, image, awards }) => (
               <div className="card container mb-5 bg-dark-subtle" key={`actor-${id}`}>
                 <div className="card-body">
@@ -159,6 +183,7 @@ function App() {
         )}
       </div>
     </>
+
   );
 }
 
