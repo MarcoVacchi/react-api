@@ -1,5 +1,6 @@
 body {
-  background-color: brown;
+  background-image: url(../img/97899.jpg);
+  background-size: contain;
 }
 
 .card-img {

@@ -6,43 +6,42 @@ const endPoint = ' https://www.freetestapi.com/api/v1/actresses';
 
 function App() {
 
-  const [actress, setActress] = useState([]);
+  const [actresses, setActresses] = useState([]);
 
 
   function fetchActor() {
 
     axios.get(endPoint)
       .then(result => {
-        setActress(result.data)
+        setActresses(result.data)
       });
   };
 
   useEffect(fetchActor, []);
-  console.log(actress)
-  // {actress.map(element => (
-  //   <li>{element.name}</li>
-  // ))}
+  console.log(actresses)
+
 
   return (
     <>
-      <div className='container d-flex'>
-        {actress.map(({ id, name, birth_year, nationality, biography, image, awards }) => (
-
-          <div className="card" key={id}>
+      <div className='container d-flex flex-wrap'>
+        {actresses.map(({ id, name, birth_year, nationality, biography, image, awards }) => (
+          <div className="card container mb-5 bg-dark-subtle" key={id}>
             <div className="card-body">
-              <h5 className="card-title">Name: {name}</h5>
-              <p className="card-text">Date of Birth: {birth_year}</p>
+              <h1 className='text-center'>CARD ACTRESSES</h1>
+              <h2 className="card-title">Name: {name}</h2>
+              <hr />
+              <h3 className="card-text">Date of Birth: {birth_year}</h3>
             </div>
+
             <ul className="list-group list-group-flush">
-              <li className="list-group-item">Nationality: {nationality}</li>
-              <li className="list-group-item">Biography: {biography}</li>
-              <img src={image} className="card-img" alt="..." />
-              <li className="list-group-item">
-                <h4><strong>Awards: {awards}</strong></h4>
+              <li className="list-group-item bg-dark-subtle"><h4>Nationality: {nationality}</h4></li>
+              <li className="list-group-item bg-dark-subtle"><h5>Biography: {biography}</h5></li>
+              <img src={image} className="card-img" alt="image-current" />
+              <li className="list-group-item bg-dark-subtle">
+                <h6><strong>Awards: {awards}</strong></h6>
               </li>
             </ul>
           </div>
-
         ))}
       </div>
     </>
