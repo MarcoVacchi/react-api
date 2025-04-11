@@ -29,20 +29,34 @@ function App() {
   const [selectedCategory, setSelectedCategory] = useState('all');
   const [searchedName, setSearchedName] = useState('');
 
+  // Data fetching
   useEffect(() => {
     axios.get(endPointActresses)
       .then(result => setActresses(result.data))
       .catch(error => console.error('Error fetching actresses:', error));
-
     axios.get(endPointActors)
       .then(result => setActors(result.data))
       .catch(error => console.error('Error fetching actors:', error));
   }, []);
 
+  // Dynamic background
+  useEffect(() => {
+    document.body.classList.remove('default-bg', 'actresses-bg', 'actors-bg', 'all-bg');
+
+    if (selectedCategory === 'actresses') {
+      document.body.classList.add('actresses-bg');
+    } else if (selectedCategory === 'actors') {
+      document.body.classList.add('actors-bg');
+    } else if (selectedCategory === 'all') {
+      document.body.classList.add('all-bg');
+    } else {
+      document.body.classList.add('default-bg');
+    }
+  }, [selectedCategory]);
+
   const filteredActresses = actresses.filter(result =>
     result.name.toLowerCase().includes(searchedName.toLowerCase())
   );
-
   const filteredActors = actors.filter(result =>
     result.name.toLowerCase().includes(searchedName.toLowerCase())
   );
@@ -65,35 +79,34 @@ function App() {
       </div>
 
       <div className="container d-flex flex-wrap justify-content-center gap-4">
-        {(selectedCategory === 'actresses' || selectedCategory === 'all') &&
-          filteredActresses.map(({ name, birth_year, nationality, biography, image, awards }, index) => (
-            <ProfileCard
-              key={`actress-${index}`}
-              title="CARD ACTRESS"
-              name={name}
-              birth_year={birth_year}
-              nationality={nationality}
-              biography={biography}
-              image={image}
-              awards={awards}
-            />
-          ))
-        }
+        {(selectedCategory === 'actresses' || selectedCategory === 'all') && (
+          <>
+            {filteredActresses.map(({ name, birth_year, nationality, biography, image, awards }, index) => (
+              <ProfileCard
+                key={`actress-${index}`}
+                title="CARD ACTRESS"
+                {...{ name, birth_year, nationality, biography, image, awards }}
+              />
+            ))}
+          </>
+        )}
 
-        {(selectedCategory === 'actors' || selectedCategory === 'all') &&
-          filteredActors.map(({ id, name, birth_year, nationality, biography, image, awards }) => (
-            <ProfileCard
-              key={`actor-${id}`}
-              title="CARD ACTOR"
-              name={name}
-              birth_year={birth_year}
-              nationality={nationality}
-              biography={biography}
-              image={image}
-              awards={awards}
-            />
-          ))
-        }
+        {(selectedCategory === 'actors' || selectedCategory === 'all') && (
+          <>
+            {filteredActors.map(({ id, name, birth_year, nationality, biography, image, awards }) => (
+              <ProfileCard
+                key={`actor-${id}`}
+                name={name}
+                birth_year={birth_year}
+                nationality={nationality}
+                biography={biography}
+                image={image}
+                awards={awards}
+              />
+            ))}
+          </>
+        )}
+
       </div>
     </>
   );
