@@ -33,6 +33,7 @@ function App() {
     axios.get(endPointActresses)
       .then(result => setActresses(result.data))
       .catch(error => console.error('Error fetching actresses:', error));
+
     axios.get(endPointActors)
       .then(result => setActors(result.data))
       .catch(error => console.error('Error fetching actors:', error));
