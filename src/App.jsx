@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, act } from 'react';
 import axios from 'axios';
 
 
@@ -18,13 +18,31 @@ function App() {
   };
 
   useEffect(fetchActor, []);
-  // console.log(actress)
+  console.log(actress)
+  // {actress.map(element => (
+  //   <li>{element.name}</li>
+  // ))}
 
   return (
     <>
-      <div className='container'>
-        {actress.map(element => (
-          <li>{element.name}</li>
+      <div className='container d-flex'>
+        {actress.map(({ id, name, birth_year, nationality, biography, image, awards }) => (
+
+          <div className="card" key={id}>
+            <div className="card-body">
+              <h5 className="card-title">Name: {name}</h5>
+              <p className="card-text">Date of Birth: {birth_year}</p>
+            </div>
+            <ul className="list-group list-group-flush">
+              <li className="list-group-item">Nationality: {nationality}</li>
+              <li className="list-group-item">Biography: {biography}</li>
+              <img src={image} className="card-img" alt="..." />
+              <li className="list-group-item">
+                <h4><strong>Awards: {awards}</strong></h4>
+              </li>
+            </ul>
+          </div>
+
         ))}
       </div>
     </>
@@ -41,7 +59,6 @@ export default App
 // - biografia
 // - immagine
 // - riconoscimenti
-// - immagine
 
 // MILESTONE 3
 // Mostriamo in pagina una card per ciascun attore, con grafica a piacimento!
