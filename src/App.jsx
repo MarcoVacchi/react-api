@@ -1,6 +1,5 @@
 import { useState, useEffect } from 'react';
 import axios from 'axios';
-
 const endPointActresses = 'https://www.freetestapi.com/api/v1/actresses';
 const endPointActors = 'https://www.freetestapi.com/api/v1/actors';
 
@@ -29,7 +28,7 @@ function App() {
   const [selectedCategory, setSelectedCategory] = useState('all');
   const [searchedName, setSearchedName] = useState('');
 
-  // Data fetching
+  // Data fetching - using the more concise approach from MV1
   useEffect(() => {
     axios.get(endPointActresses)
       .then(result => setActresses(result.data))
@@ -54,9 +53,11 @@ function App() {
     }
   }, [selectedCategory]);
 
+  // Filters
   const filteredActresses = actresses.filter(result =>
     result.name.toLowerCase().includes(searchedName.toLowerCase())
   );
+
   const filteredActors = actors.filter(result =>
     result.name.toLowerCase().includes(searchedName.toLowerCase())
   );
@@ -96,6 +97,7 @@ function App() {
             {filteredActors.map(({ id, name, birth_year, nationality, biography, image, awards }) => (
               <ProfileCard
                 key={`actor-${id}`}
+                title="CARD ACTOR"
                 name={name}
                 birth_year={birth_year}
                 nationality={nationality}
@@ -106,7 +108,6 @@ function App() {
             ))}
           </>
         )}
-
       </div>
     </>
   );
