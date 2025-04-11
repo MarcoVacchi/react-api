@@ -136,4 +136,28 @@ button:hover {
     margin-bottom: 1rem;
     width: 90%;
   }
+.card-img {
+  width: 200px;
+  height: 200px;
+}
+
+body.default-bg {
+  background-image: url('./assets/home.jpg');
+  background-size: cover;
+}
+
+body.actresses-bg {
+  background-image: url('./assets/img1.jpg');
+  background-size: contain;
+}
+
+body.actors-bg {
+  background-image: url('./assets/img2.jpg');
+  background-size: contain;
+}
+
+body.all-bg {
+  background-image: url('./assets/img3.jpg');
+  background-size: contain;
+
 }
