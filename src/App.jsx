@@ -6,31 +6,32 @@ const endPoint = ' https://www.freetestapi.com/api/v1/actresses';
 
 function App() {
 
-  const [actor, setActor] = useState([]);
+  const [actress, setActress] = useState([]);
 
 
-  function fetchTodos() {
+  function fetchActor() {
 
     axios.get(endPoint)
       .then(result => {
-        console.log(result.data)
-        setActor(result.data)
+        setActress(result.data)
       });
   };
-  useEffect(fetchTodos, []);
+
+  useEffect(fetchActor, []);
+  // console.log(actress)
 
   return (
     <>
-
+      <div className='container'>
+        {actress.map(element => (
+          <li>{element.name}</li>
+        ))}
+      </div>
     </>
   )
 };
 
 export default App
-
-
-// MILESTONE 1
-// Al caricamento dell'applicazione, recuperiamo la lista degli attori (o attrici) dalle API e stampiamoli in console.
 
 // MILESTONE 2
 // Prepariamo una card per ciascun attore/attrice, mostrandone le seguenti informazioni:
@@ -41,3 +42,6 @@ export default App
 // - immagine
 // - riconoscimenti
 // - immagine
+
+// MILESTONE 3
+// Mostriamo in pagina una card per ciascun attore, con grafica a piacimento!
