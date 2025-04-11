@@ -9,16 +9,19 @@ body.default-bg {
 body.actresses-bg {
   background-image: url('./assets/img1.jpg');
   background-size: cover;
+  /* Changed from contain to cover for better appearance */
 }
 
 body.actors-bg {
   background-image: url('./assets/img2.jpg');
   background-size: cover;
+  /* Changed from contain to cover for better appearance */
 }
 
 body.all-bg {
   background-image: url('./assets/img3.jpg');
   background-size: cover;
+  /* Changed from contain to cover for better appearance */
 }
 
 /* Global Styles */

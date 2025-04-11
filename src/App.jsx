@@ -25,20 +25,37 @@ function ProfileCard({ title, name, birth_year, nationality, biography, image, a
 function App() {
   const [actresses, setActresses] = useState([]);
   const [actors, setActors] = useState([]);
-  const [selectedCategory, setSelectedCategory] = useState('all');
+  const [selectedCategory, setSelectedCategory] = useState('');
   const [searchedName, setSearchedName] = useState('');
 
-  // Data fetching - using the more concise approach from MV1
-  useEffect(() => {
+  function fetchActresses() {
     axios.get(endPointActresses)
       .then(result => setActresses(result.data))
       .catch(error => console.error('Error fetching actresses:', error));
+  }
+
+  function fetchActors() {
     axios.get(endPointActors)
       .then(result => setActors(result.data))
       .catch(error => console.error('Error fetching actors:', error));
+  }
+
+  useEffect(() => {
+    if (selectedCategory === 'actresses') {
+      fetchActresses();
+    } else if (selectedCategory === 'actors') {
+      fetchActors();
+    } else if (selectedCategory === 'all') {
+      fetchActresses();
+      fetchActors();
+    }
+  }, [selectedCategory]);
+
+  useEffect(() => {
+    fetchActresses();
+    fetchActors();
   }, []);
 
-  // Dynamic background
   useEffect(() => {
     document.body.classList.remove('default-bg', 'actresses-bg', 'actors-bg', 'all-bg');
 
@@ -51,9 +68,12 @@ function App() {
     } else {
       document.body.classList.add('default-bg');
     }
+
+    return () => {
+      document.body.classList.remove('default-bg', 'actresses-bg', 'actors-bg', 'all-bg');
+    };
   }, [selectedCategory]);
 
-  // Filters
   const filteredActresses = actresses.filter(result =>
     result.name.toLowerCase().includes(searchedName.toLowerCase())
   );
@@ -74,9 +94,24 @@ function App() {
             onChange={(e) => setSearchedName(e.target.value)}
           />
         )}
-        <button onClick={() => setSelectedCategory('actresses')} className="btn btn-outline-primary px-4">Actresses</button>
-        <button onClick={() => setSelectedCategory('actors')} className="btn btn-outline-success px-4">Actors</button>
-        <button onClick={() => setSelectedCategory('all')} className="btn btn-outline-dark px-4">All</button>
+        <button
+          onClick={() => setSelectedCategory('actresses')}
+          className="btn btn-outline-primary px-4"
+        >
+          Actresses
+        </button>
+        <button
+          onClick={() => setSelectedCategory('actors')}
+          className="btn btn-outline-success px-4"
+        >
+          Actors
+        </button>
+        <button
+          onClick={() => setSelectedCategory('all')}
+          className="btn btn-outline-dark px-4"
+        >
+          All
+        </button>
       </div>
 
       <div className="container d-flex flex-wrap justify-content-center gap-4">
@@ -98,12 +133,7 @@ function App() {
               <ProfileCard
                 key={`actor-${id}`}
                 title="CARD ACTOR"
-                name={name}
-                birth_year={birth_year}
-                nationality={nationality}
-                biography={biography}
-                image={image}
-                awards={awards}
+                {...{ name, birth_year, nationality, biography, image, awards }}
               />
             ))}
           </>
