@@ -3,11 +3,29 @@ import axios from 'axios';
 const endPointActresses = 'https://www.freetestapi.com/api/v1/actresses';
 const endPointActors = 'https://www.freetestapi.com/api/v1/actors';
 
+
 function App() {
   const [actresses, setActresses] = useState([]);
   const [actors, setActors] = useState([]);
   const [selectedCategory, setSelectedCategory] = useState('');
-  const [searchedName, setSearchedName] = useState('');
+  // const [searchedName, setSearchedName] = useState('');
+  const [searchedName, setSearchedName] = useState('')
+
+  function fetchSearch() {
+    if (selectedCategory === 'actors') {
+      axios.get(`https://www.freetestapi.com/api/v1/actors?search=${searchedName}`)
+        .then(result => setActors(result.data));
+    } else if (selectedCategory === 'actresses') {
+      axios.get(`https://www.freetestapi.com/api/v1/actresses?search=${searchedName}`)
+        .then(result => setActresses(result.data));
+    } else if (selectedCategory === 'all') {
+      axios.get(`https://www.freetestapi.com/api/v1/actors?search=${searchedName}`)
+        .then(result => setActors(result.data));
+      axios.get(`https://www.freetestapi.com/api/v1/actresses?search=${searchedName}`)
+        .then(result => setActresses(result.data));
+    }
+  }
+
 
   function fetchActresses() {
     axios.get(endPointActresses).then(result => {
@@ -53,28 +71,34 @@ function App() {
   useEffect(fetchActresses, []);
   useEffect(fetchActors, []);
 
-  // Filters
-  const filteredActresses = actresses.filter(result =>
-    result.name.toLowerCase().includes(searchedName.toLowerCase())
-  );
+  // // Filters
+  // const filteredActresses = actresses.filter(result =>
+  //   result.name.toLowerCase().includes(searchedName.toLowerCase())
+  // );
 
-  const filteredActors = actors.filter(result =>
-    result.name.toLowerCase().includes(searchedName.toLowerCase())
-  );
+  // const filteredActors = actors.filter(result =>
+  //   result.name.toLowerCase().includes(searchedName.toLowerCase())
+  // );
 
   return (
     <>
       <div className="container d-flex justify-content-center mt-5 mb-5">
 
-        {selectedCategory === 'all' ? (
-          <input
-            type="text"
-            placeholder="Insert a name"
-            value={searchedName}
-            onChange={(event) => setSearchedName(event.target.value)}
-          />
-        ) : (
-          ''
+        {(selectedCategory === 'actors' || selectedCategory === 'actresses' || selectedCategory === 'all') && (
+          <div className="d-flex justify-content-center mb-3">
+            <input
+              type="text"
+              placeholder="Insert a name"
+              value={searchedName}
+              onChange={(event) => setSearchedName(event.target.value)}
+              className="form-control w-50"
+            />
+            <button
+              className="btn btn-primary mx-2"
+              onClick={fetchSearch}>
+              Search
+            </button>
+          </div>
         )}
 
         <button
@@ -98,10 +122,10 @@ function App() {
         >
           All
         </button>
-      </div>
+      </div >
 
       <div className="container d-flex flex-wrap mt-3 mb-3">
-        {selectedCategory === 'actresses' && filteredActresses.map(({ name, birth_year, nationality, biography, image, awards }, index) => (
+        {selectedCategory === 'actresses' && actresses.map(({ name, birth_year, nationality, biography, image, awards }, index) => (
           <div className="card container mb-5 bg-dark-subtle" key={index}>
             <div className="card-body">
               <h1 className="text-center">CARD ACTRESS</h1>
@@ -120,7 +144,7 @@ function App() {
           </div>
         ))}
 
-        {selectedCategory === 'actors' && filteredActors.map(({ id, name, birth_year, nationality, biography, image, awards }) => (
+        {selectedCategory === 'actors' && actors.map(({ id, name, birth_year, nationality, biography, image, awards }) => (
           <div className="card container mb-5 bg-dark-subtle" key={id}>
             <div className="card-body">
               <h1 className="text-center">CARD ACTOR</h1>
@@ -142,10 +166,10 @@ function App() {
         {selectedCategory === 'all' && (
           <>
 
-            {filteredActresses.map(({ name, birth_year, nationality, biography, image, awards }, index) => (
+            {actresses.map(({ name, birth_year, nationality, biography, image, awards }, index) => (
               <div className="card container mb-5 bg-dark-subtle" key={`actress-${index}`}>
                 <div className="card-body">
-                  <h1 className="text-center">CARD ACTRESS</h1>
+                  <h1 className="text-center">CARDS ALL ACTOR</h1>
                   <h2 className="card-title">Name: {name}</h2>
                   <hr />
                   <h3 className="card-text">Date of Birth: {birth_year}</h3>
@@ -161,10 +185,9 @@ function App() {
               </div>
             ))}
 
-            {filteredActors.map(({ id, name, birth_year, nationality, biography, image, awards }) => (
+            {actors.map(({ id, name, birth_year, nationality, biography, image, awards }) => (
               <div className="card container mb-5 bg-dark-subtle" key={`actor-${id}`}>
                 <div className="card-body">
-                  <h1 className="text-center">CARD ACTOR</h1>
                   <h2 className="card-title">Name: {name}</h2>
                   <hr />
                   <h3 className="card-text">Date of Birth: {birth_year}</h3>
@@ -188,10 +211,8 @@ function App() {
 }
 
 export default App;
-// *BONUS 1 :rilassato:*
-// Stampare sia una lista delle attrici che degli attori, separatamente.
 
 
-// *BONUS 3* :testa_che_esplode:
+
 // Inserire un filtro di ricerca che permetta di cercare gli attori o le attrici per nome.
 // Per fare questo bonus avrai bisogno di consultare la documentazione:
