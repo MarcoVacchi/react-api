@@ -6,7 +6,7 @@ const endPointActors = 'https://www.freetestapi.com/api/v1/actors';
 
 function ProfileCard({ title, name, birth_year, nationality, biography, image, awards }) {
   return (
-    <div className="card container mb-5 bg-dark-subtle">
+    <div className="card container mb-5 glass">
       <div className="card-body">
         <h1 className="text-center">{title}</h1>
         <h2 className="card-title">Name: {name}</h2>
@@ -14,10 +14,10 @@ function ProfileCard({ title, name, birth_year, nationality, biography, image, a
         <h3 className="card-text">Date of Birth: {birth_year}</h3>
       </div>
       <ul className="list-group list-group-flush">
-        <li className="list-group-item bg-dark-subtle"><h4>Nationality: {nationality}</h4></li>
-        <li className="list-group-item bg-dark-subtle"><h5>Biography: {biography}</h5></li>
+        <li className="list-group-item bg-transparent"><h4>Nationality: {nationality}</h4></li>
+        <li className="list-group-item bg-transparent"><h5>Biography: {biography}</h5></li>
         <img src={image} className="card-img" alt="profile" />
-        <li className="list-group-item bg-dark-subtle"><h6><strong>Awards: {awards}</strong></h6></li>
+        <li className="list-group-item bg-transparent"><h6><strong>Awards: {awards}</strong></h6></li>
       </ul>
     </div>
   );
@@ -38,45 +38,33 @@ function App() {
       .catch(error => console.error('Error fetching actors:', error));
   }, []);
 
-  const filteredActresses = actresses.filter(a =>
-    a.name.toLowerCase().includes(searchedName.toLowerCase())
+  const filteredActresses = actresses.filter(result =>
+    result.name.toLowerCase().includes(searchedName.toLowerCase())
   );
 
-  const filteredActors = actors.filter(a =>
-    a.name.toLowerCase().includes(searchedName.toLowerCase())
+  const filteredActors = actors.filter(result =>
+    result.name.toLowerCase().includes(searchedName.toLowerCase())
   );
 
   return (
     <>
-      <div className="container d-flex justify-content-center mt-5 mb-5">
-        <input
-          type='text'
-          placeholder='insert a name'
-          value={searchedName}
-          onChange={e => setSearchedName(e.target.value)}
-        />
-        <button
-          onClick={() => setSelectedCategory('actresses')}
-          type="button"
-          className="btn btn-secondary mx-3">
-          Actresses
-        </button>
-        <button
-          onClick={() => setSelectedCategory('actors')}
-          type="button"
-          className="btn btn-secondary mx-3">
-          Actors
-        </button>
-        <button
-          onClick={() => setSelectedCategory('all')}
-          type="button"
-          className="btn btn-secondary mx-3">
-          All
-        </button>
+      <div className="container d-flex flex-wrap justify-content-center gap-3 mt-5 mb-5">
+        {selectedCategory === 'all' && (
+          <input
+            type="text"
+            placeholder="Search by name..."
+            className="form-control w-50 shadow-sm rounded-pill px-4"
+            value={searchedName}
+            onChange={(e) => setSearchedName(e.target.value)}
+          />
+        )}
+        <button onClick={() => setSelectedCategory('actresses')} className="btn btn-outline-primary px-4">Actresses</button>
+        <button onClick={() => setSelectedCategory('actors')} className="btn btn-outline-success px-4">Actors</button>
+        <button onClick={() => setSelectedCategory('all')} className="btn btn-outline-dark px-4">All</button>
       </div>
 
-      <div className="container d-flex flex-wrap mt-3 mb-3">
-        {selectedCategory === 'actresses' &&
+      <div className="container d-flex flex-wrap justify-content-center gap-4">
+        {(selectedCategory === 'actresses' || selectedCategory === 'all') &&
           filteredActresses.map(({ name, birth_year, nationality, biography, image, awards }, index) => (
             <ProfileCard
               key={`actress-${index}`}
@@ -91,7 +79,7 @@ function App() {
           ))
         }
 
-        {selectedCategory === 'actors' &&
+        {(selectedCategory === 'actors' || selectedCategory === 'all') &&
           filteredActors.map(({ id, name, birth_year, nationality, biography, image, awards }) => (
             <ProfileCard
               key={`actor-${id}`}
@@ -105,35 +93,6 @@ function App() {
             />
           ))
         }
-
-        {selectedCategory === 'all' && (
-          <>
-            {filteredActresses.map(({ name, birth_year, nationality, biography, image, awards }, index) => (
-              <ProfileCard
-                key={`actress-${index}`}
-                title="CARD ACTRESS"
-                name={name}
-                birth_year={birth_year}
-                nationality={nationality}
-                biography={biography}
-                image={image}
-                awards={awards}
-              />
-            ))}
-            {filteredActors.map(({ id, name, birth_year, nationality, biography, image, awards }) => (
-              <ProfileCard
-                key={`actor-${id}`}
-                title="CARD ACTOR"
-                name={name}
-                birth_year={birth_year}
-                nationality={nationality}
-                biography={biography}
-                image={image}
-                awards={awards}
-              />
-            ))}
-          </>
-        )}
       </div>
     </>
   );
